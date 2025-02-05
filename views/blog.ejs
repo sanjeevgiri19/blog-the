@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/styles') %>
+    <title>BLOG</title>
+    <style>
+      body {
+        overflow-x: hidden;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .overflow-auto {
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 400px;
+        word-wrap: break-word;
+      }
+
+      .container {
+        padding: 4px;
+        margin: 0 auto;
+      }
+
+      h2 {
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: center;
+        /* margin-top: 20px; */
+      }
+      h3 {
+        font-size: 1.4rem;
+        font-weight: semibold;
+        /* text-align: center; */
+        /* margin-top: 20px; */
+      }
+
+      .pre-container {
+        max-width: 1300px;
+        margin: 10px auto;
+        padding: 10px;
+        /* background-color: #f8f8f8; */
+        border-radius: 8px;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .container {
+        max-width: 1300px;
+      }
+      .profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .profile-pic {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ccc;
+      }
+
+      .profile-name {
+        font-size: 25px;
+        font-weight: 500;
+        color: #333;
+      }
+
+      pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/nav') %>
+
+    <div class="container">
+      <div class="flex flex-col justify-center items-center">
+        <h2 class="mb-6"><%= blog.title %></h2>
+        <div>
+          <img src="/uploads/<%= blog.coverImage %>" alt="cc" width="800px" />
+        </div>
+      </div>
+
+      <div class="pre-container">
+        <pre class="px-5 overflow-x-auto"><%= blog.body %></pre>
+      </div>
+    </div>
+
+    <div class="container profile">
+      <img
+        class="profile-pic"
+        src="<%= blog.createdBy.profilePic %>"
+        alt="xxx"
+      />
+      <h2 class="profile-name"><%= blog.createdBy.name %></h2>
+    </div>
+
+    <div class="mt-2 container ml-6 mr-6">
+      <h1>Comments ( <%= comments.length %>)</h1>
+      <% if (!locals.user) { %>
+      <form action="/blog/comment/<%= blog._id %>" method="post">
+        <div class="mb-5">
+          <input
+            type="text"
+            id="content"
+            name="content"
+            placeholder="Enter comments"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+        >
+          Add commment
+        </button>
+      </form>
+      <% } %>
+
+      <div class="container">
+        <% comments.forEach(comment => { %>
+        <div class="mb-3 border-b pb-2">
+          <div class="flex gap-2 items-center">
+            <img
+              class="w-10 h-10 rounded-full object-cover"
+              src="<%= comment.createdBy.profilePic %>"
+              alt="Profile Pic"
+            />
+            <div>
+              <h3 class="font-semibold text-gray-800">
+                <%= comment.createdBy.name %>
+              </h3>
+              <p class="text-sm text-gray-500" id="time-<%= comment._id %>"></p>
+              <!-- Placeholder for time -->
+            </div>
+          </div>
+
+          <p class="mt-1 text-gray-700 text-base"><%= comment.content %></p>
+        </div>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            const timeElement = document.getElementById(
+              "time-<%= comment._id %>"
+            );
+            timeElement.textContent = timeAgo("<%= comment.createdAt %>");
+          });
+        </script>
+        <% }) %>
+      </div>
+    </div>
+
+    <script>
+      function timeAgo(date) {
+        const now = new Date();
+        const past = new Date(date);
+        const seconds = Math.floor((now - past) / 1000);
+
+        const intervals = {
+          year: 31536000,
+          month: 2592000,
+          week: 604800,
+          day: 86400,
+          hour: 3600,
+          minute: 60,
+          second: 1,
+        };
+
+        for (const [unit, value] of Object.entries(intervals)) {
+          const time = Math.floor(seconds / value);
+          if (time > 0) {
+            return `${time} ${unit}${time > 1 ? "s" : ""} ago`;
+          }
+        }
+        return "Just now";
+      }
+    </script>
+
+    <%- include('./partials/scripts') %>
+  </body>
+</html>

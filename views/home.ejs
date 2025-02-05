@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/styles') %>
+    <title>BLOG ME</title>
+  </head>
+  <body>
+    <%- include('./partials/nav') %>
+
+    <div class="container mx-auto mb-5 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <% blogs.forEach(blog => { %>
+      <div
+        class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm mt-5 ml-6 dark:bg-gray-800 dark:border-gray-700"
+      >
+        <img
+          class="rounded-t-lg"
+          src="/uploads/<%=blog.coverImage %>"
+          alt="xxxxx"
+        />
+
+        <div class="p-5">
+          <a href="#">
+            <h5
+              class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+            >
+              <%= blog.title %>
+            </h5>
+          </a>
+          <a
+            href="/blog/<%= blog._id %>"
+            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4"
+          >
+            view
+          </a>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+
+    <%- include('./partials/scripts') %>
+  </body>
+</html>
