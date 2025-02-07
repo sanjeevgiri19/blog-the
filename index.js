@@ -46,4 +46,4 @@ app.get("/", verifyToken, async (req, res) => {
   return res.render("home", { user: req.user, blogs: allBlogs });
 });
 
-app.listen(PORT, () => console.log(`Connected to PORT: ${PORT}`));
+app.listen(4000, () => console.log(`Connected to PORT: ${PORT}`));
