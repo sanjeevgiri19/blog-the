@@ -13,7 +13,7 @@ const { verifyToken } = require("./middlewares/auth");
 // const { checkForAuthCookie } = require("./middlewares/authverify");
 
 const app = express();
-PORT = process.env.PORT || 8000;
+PORT = process.env.PORT || 6000;
 
 const cors = require("cors");
 const Blog = require("./models/blog");
@@ -25,8 +25,10 @@ app.use(express.json());
 app.use(cookieParser());
 // app.use(checkForAuthCookie("token"));
 
+const mongoURL = process.env.MONGODB_URL;
+
 mongoose
-  .connect(process.env.MONGODB_URL)
+  .connect(mongoURL)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error(err));
 
@@ -35,7 +37,6 @@ app.set("views", path.resolve("./views"));
 
 app.use("/user", userRoute);
 app.use("/blog", blogRoute);
-
 
 app.get("/", verifyToken, async (req, res) => {
   const allBlogs = await Blog.find({});
