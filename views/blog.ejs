@@ -81,7 +81,13 @@
 
     <div class="container">
       <div class="flex flex-col justify-center items-center">
-        <h2 class="mb-6"><%= blog.title %></h2>
+        <h2 class="mb-6">
+          <%= blog.title %> 
+          <p class="text-sm text-gray-500">
+            <span id="blog-time"></span>
+          </p>
+        </h2>
+        <!-- <p class="text-sm text-gray-500">Created at: <span id="blog-time"></span></p> -->
         <div>
           <img src="/uploads/<%= blog.coverImage %>" alt="cc" width="800px" />
         </div>
@@ -93,12 +99,16 @@
     </div>
 
     <div class="container profile">
+      <% if (blog.createdBy) { %>
       <img
         class="profile-pic"
         src="<%= blog.createdBy.profilePic %>"
-        alt="xxx"
+        alt="Author's Profile Picture"
       />
       <h2 class="profile-name"><%= blog.createdBy.name %></h2>
+      <% } else { %>
+      <h2 class="profile-name">Unknown Author</h2>
+      <% } %>
     </div>
 
     <div class="mt-2 container ml-6 mr-6">
@@ -151,6 +161,9 @@
               "time-<%= comment._id %>"
             );
             timeElement.textContent = timeAgo("<%= comment.createdAt %>");
+
+            const blogTimeElement = document.getElementById("blog-time");
+            blogTimeElement.textContent = timeAgo("<%= blog.createdAt %>");
           });
         </script>
         <% }) %>
