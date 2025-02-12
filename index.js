@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const userRoute = require("./routes/user");
 const blogRoute = require("./routes/blog");
+// const commentRoute = require('./routes/comment')
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const { verifyToken } = require("./middlewares/auth");
@@ -13,7 +14,7 @@ const { verifyToken } = require("./middlewares/auth");
 // const { checkForAuthCookie } = require("./middlewares/authverify");
 
 const app = express();
-PORT = process.env.PORT || 6000;
+PORT = process.env.PORT || 8000;
 
 const cors = require("cors");
 const Blog = require("./models/blog");
@@ -35,8 +36,14 @@ mongoose
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
 
+app.use((req, res, next) => {
+  res.locals.user = req.user || null;
+  next();
+});
+
 app.use("/user", userRoute);
 app.use("/blog", blogRoute);
+// app.use('/blog',commentRoute);
 
 app.get("/", verifyToken, async (req, res) => {
   const allBlogs = await Blog.find({});

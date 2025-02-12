@@ -17,8 +17,8 @@
       }
 
       .title {
-        overflow: hidden; 
-        white-space: nowrap; 
+        overflow: hidden;
+        white-space: nowrap;
         text-overflow: ellipsis; /* Truncates the title with ellipsis if it exceeds */
         height: 50px; /* Set a fixed height for the title */
         font-size: 1.25rem; /* You can adjust the font size as needed */
@@ -32,31 +32,40 @@
   <body>
     <%- include('./partials/nav') %>
 
-    <div class="container mx-auto mb-5 grid grid-cols-2 p-4 md:grid-cols-4 gap-3">
+    <div
+      class="container mx-auto mb-5 grid grid-cols-2 p-4 md:grid-cols-4 gap-3"
+    >
       <% blogs.forEach(blog => { %>
       <div
         class="blog-card max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm mt-5 ml-6 dark:bg-gray-800 dark:border-gray-700"
       >
-        <img
-          class="blog-img rounded-t-lg"
-          src="/uploads/<%= blog.coverImage %>"
-          alt="cover image"
-        />
+        <a href="/blog/<%= blog._id %>">
+          <img
+            class="blog-img rounded-t-lg"
+            src="/uploads/<%= blog.coverImage %>"
+            alt="cover image"
+          />
+        </a>
 
         <div class="p-5">
-          <a href="#">
+          <a href="/blog/<%= blog._id %>">
             <h5
               class="title mb-2 font-bold tracking-tight text-gray-900 dark:text-white"
             >
               <%= blog.title %>
             </h5>
           </a>
-          <a
-            href="/blog/<%= blog._id %>"
-            class="view-btn inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4"
-          >
-            view
-          </a>
+
+          <div class="flex gap-1 justify-between">
+            <a
+              href="/blog/<%= blog._id %>"
+              class="view-btn inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 "
+            >
+              view
+            </a>
+
+           
+          </div>
         </div>
       </div>
       <% }) %>
