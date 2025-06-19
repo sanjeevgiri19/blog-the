@@ -18,22 +18,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-//g et new blog
 router.get("/add-new", (req, res) => {
-  // console.log("this is blog page");
-
-  return res.render("addBlog");
+  res.render("addBlog", {
+    currentUrl: req.originalUrl,
+  });
 });
 
-//get blog page and comment
 router.get("/:id", async (req, res) => {
   const blog = await Blog.findById(req.params.id).populate("createdBy");
   const comments = await Comment.find({ blogId: req.params.id }).populate(
     "createdBy"
   );
-  // console.log("blog id", blog);
-  // console.log("comments ", comment);
-
   return res.render("blog", { blog, comments, user: req.user });
 });
 
@@ -80,31 +75,8 @@ router.post("/comment/:blogId", verifyToken, async (req, res) => {
     createdBy: req.user._id,
     blogId: req.params.blogId,
   });
-  // console.log("comment issss", comment);
   return res.redirect(`/blog/${req.params.blogId}`);
 });
-
-// edit comment
-// Backend route to update a comment
-// router.post("/comment/edit/:commentId", verifyToken, async (req, res) => {
-//   try {
-//     const comment = await Comment.findById(req.params.commentId);
-
-//     // Ensure the user is the one who created the comment
-//     if (comment.createdBy.toString() !== req.user._id.toString()) {
-//       return res.status(403).json({ success: false, message: "You can only edit your own comments." });
-//     }
-
-//     // Update the content of the comment
-//     comment.content = req.body.content;
-//     await comment.save();
-
-//     return res.json({ success: true });
-//   } catch (err) {
-//     console.error(err);
-//     return res.status(500).json({ success: false, message: "Error updating comment." });
-//   }
-// });
 
 router.put("/comment/edit/:id", async (req, res) => {
   try {
@@ -142,11 +114,9 @@ router.post(
       const newBlog = new Blog({
         title,
         body,
-        // coverImage:`/uploads/${req.file.filename}`,   view ma nai ramro sanga path cha
         coverImage,
-        createdBy: req.user._id, // Assuming user is authenticated
+        createdBy: req.user._id,
       });
-      // console.log(newBlog);
       await newBlog.save();
       res.redirect(`/blog/${newBlog._id}`);
     } catch (error) {

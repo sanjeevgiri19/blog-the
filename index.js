@@ -3,15 +3,11 @@ const express = require("express");
 const path = require("path");
 const userRoute = require("./routes/user");
 const blogRoute = require("./routes/blog");
-// const commentRoute = require('./routes/comment')
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
-const { verifyToken } = require("./middlewares/auth");
+const { verifyToken, urlMiddleware } = require("./middlewares/auth");
 
-// const cors = require('cors')
-// const User = require("./models/user");
-// const bcrypt = require("bcrypt");
-// const { checkForAuthCookie } = require("./middlewares/authverify");
+
 
 const app = express();
 PORT = process.env.PORT || 8000;
@@ -24,7 +20,7 @@ app.use(express.static(path.resolve("./public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-// app.use(checkForAuthCookie("token"));
+app.use(urlMiddleware); 
 
 const mongoURL = process.env.MONGODB_URL;
 
@@ -43,12 +39,9 @@ app.use((req, res, next) => {
 
 app.use("/user", userRoute);
 app.use("/blog", blogRoute);
-// app.use('/blog',commentRoute);
 
 app.get("/", verifyToken, async (req, res) => {
   const allBlogs = await Blog.find({});
-  // console.log(process.env);
-  // console.log(allBlogs);
   const user = req.user;
   return res.render("home", { user: req.user, blogs: allBlogs });
 });

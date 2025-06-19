@@ -14,7 +14,6 @@ router.get("/signup", (req, res) => {
 
 router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
-  // console.log(req.body);
 
   try {
     if (!name || !email || !password) {
@@ -22,7 +21,6 @@ router.post("/signup", async (req, res) => {
     }
 
     // await User.create({ name, email, password });
-
     const user = new User({ name, email, password });
     await user.save();
 
@@ -39,7 +37,6 @@ router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Validate that both fields are provided
     if (!email || !password) {
       return res.status(400).json({ message: "Please enter all fields" });
     }
@@ -48,9 +45,7 @@ router.post("/signin", async (req, res) => {
       return res.status(400).json({ message: "User does not exist" });
     }
 
-    //Compare password
     user.comparePassword(password, (err, isMatch) => {
-      // if (err) throw err;
       if (err) {
         console.error(err);
         return res.status(500).json({ message: "Internal server error" });
@@ -61,9 +56,6 @@ router.post("/signin", async (req, res) => {
         });
 
       const token = generateTokenForUser(user);
-      // console.log("token", token);
-
-      //Authentication Successful
       return res.cookie("token", token).redirect("/");
     });
   } catch (error) {
